@@ -1,0 +1,72 @@
+﻿
+<div>
+    <a class="@smallboxShow" @onclick="ShowLightBox">
+        <img src="@smallImage">
+    </a>
+
+    @if (string.IsNullOrEmpty(VideoSource))
+    {
+        <a class="lightbox @onStyle" id="img1" @onclick="HideLightBox">
+            <span style="background-image: url(@largeImage)"></span>
+        </a>
+    }
+    else
+    {
+        <div class="lightbox @videoStyle" @onclick="HideLightBox">
+            <iframe src="@VideoSource" width="900" height="450" frameborder="0" autoplay style="margin-left:25%;margin-right:25%;margin-top:25%"></iframe>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string ThumbnailSource { get; set; }
+
+    [Parameter]
+    public string VideoSource { get; set; }
+
+    [Parameter]
+    public string LargeImageSource { get; set; }
+
+    public string smallImage = "https://picsum.photos/seed/5/";
+    public string largeImage = "https://picsum.photos/seed/5/";
+
+    private string onStyle = "";
+    private string smallboxShow = "";
+    private string videoStyle = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        largeImage = $"{LargeImageSource}900/450";
+        smallImage = $"{ThumbnailSource}500/300";
+        if (!string.IsNullOrEmpty(VideoSource))
+        {
+            VideoSource = $"{VideoSource}?color=ef2200&byline=0&portrait=0";
+        }
+        await Task.CompletedTask;
+    }
+
+    private void ShowLightBox()
+    {
+        if (string.IsNullOrEmpty(VideoSource))
+        {
+            onStyle = "lbon";
+        }
+        else
+        {
+            videoStyle = "video_lightbox_on";
+        }
+
+        smallboxShow = "smallbox";
+        StateHasChanged();
+    }
+
+    private void HideLightBox()
+    {
+        onStyle = "";
+        smallboxShow = "";
+        videoStyle = "";
+        StateHasChanged();
+    }
+}
